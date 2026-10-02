@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>RIAT TDIU - Pixel-Perfect Android Widget Simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      background: #060911;
+      color: #f1f5f9;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 50px;
+      padding: 30px 20px;
+    }
+
+    .controls-panel {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 28px;
+      width: 400px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+    .panel-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 22px;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .control-group {
+      margin-bottom: 22px;
+    }
+    .control-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .select-input, .range-slider {
+      width: 100%;
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    .theme-selector {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .theme-btn {
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      padding: 11px 8px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .theme-btn.active {
+      background: #0284c7;
+      color: #fff;
+      border-color: #38bdf8;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+    }
+
+    .phone-mockup {
+      width: 375px;
+      height: 760px;
+      background: #000;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 0 0 0 4px #1e293b, 0 30px 80px rgba(0,0,0,0.9), 0 0 50px rgba(2, 132, 199, 0.25);
+      position: relative;
+    }
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1000&auto=format&fit=crop') center/cover;
+      display: flex;
+      flex-direction: column;
+    }
+    .phone-notch {
+      width: 90px;
+      height: 22px;
+      background: #000;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 20px;
+      z-index: 100;
+    }
+    .status-bar {
+      height: 38px;
+      padding: 8px 22px 0 22px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      z-index: 90;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    }
+    .home-screen {
+      flex: 1;
+      padding: 24px 16px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .clock-area {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 25px;
+    }
+    .clock-time {
+      font-size: 58px;
+      font-weight: 300;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      line-height: 1;
+      text-shadow: 0 3px 15px rgba(0,0,0,0.6);
+    }
+    .clock-date {
+      font-size: 14px;
+      color: rgba(255,255,255,0.9);
+      margin-top: 6px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+    }
+
+    .widget-container {
+      width: 100%;
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      padding: 22px 18px 18px 16px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+      transition: background 0.3s ease, color 0.3s ease;
+      cursor: pointer;
+    }
+    .widget-indicator-bar {
+      width: 5px;
+      border-radius: 4px;
+      background: #0088ff;
+      margin-right: 14px;
+      flex-shrink: 0;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .widget-content-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .widget-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .widget-pair-time {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+    .widget-type-pill {
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      background: #2b7fff;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(43, 127, 255, 0.4);
+    }
+    .widget-subject-title {
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.2px;
+      margin-bottom: 12px;
+    }
+    .widget-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .meta-item i {
+      font-size: 15px;
+      opacity: 0.9;
+    }
+
+    .widget-bottom-row {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .widget-dropdown-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .widget-expanded-list {
+      display: none;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      flex-direction: column;
+      gap: 8px;
+    }
+    .expanded-lesson-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 4px 0;
+    }
+
+    .theme-light {
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      color: #111827;
+    }
+    .theme-light .widget-indicator-bar {
+      background: #0077ff;
+      box-shadow: 0 0 10px rgba(0, 119, 255, 0.5);
+    }
+    .theme-light .widget-pair-time {
+      color: #4b5563;
+    }
+    .theme-light .widget-type-pill {
+      background: #3b82f6;
+      color: #ffffff;
+    }
+    .theme-light .widget-subject-title {
+      color: #0b0f19;
+    }
+    .theme-light .widget-meta-row {
+      color: #1f2937;
+    }
+    .theme-light .widget-dropdown-pill {
+      background: rgba(220, 235, 252, 0.85);
+      color: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .theme-dark {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      color: #ffffff;
+    }
+    .theme-dark .widget-indicator-bar {
+      background: #00d2ff;
+      box-shadow: 0 0 14px rgba(0, 210, 255, 0.75);
+    }
+    .theme-dark .widget-pair-time {
+      color: #cbd5e1;
+    }
+    .theme-dark .widget-type-pill {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 3px 12px rgba(37, 99, 235, 0.45);
+    }
+    .theme-dark .widget-subject-title {
+      color: #ffffff;
+    }
+    .theme-dark .widget-meta-row {
+      color: #f1f5f9;
+    }
+    .theme-dark .widget-dropdown-pill {
+      background: rgba(43, 62, 90, 0.85);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .theme-oled {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+    }
+    .theme-oled .widget-indicator-bar {
+      background: #00e5ff;
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.9);
+    }
+    .theme-oled .widget-pair-time {
+      color: #e2e8f0;
+    }
+    .theme-oled .widget-type-pill {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .theme-oled .widget-subject-title {
+      color: #ffffff;
+    }
+    .theme-oled .widget-meta-row {
+      color: #ffffff;
+    }
+    .theme-oled .widget-dropdown-pill {
+      background: #182436;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .app-dock {
+      display: flex;
+      justify-content: space-around;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(15px);
+      padding: 12px;
+      border-radius: 26px;
+      margin-bottom: 6px;
+    }
+    .app-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="controls-panel">
+    <div class="panel-title">
+      <i class="fa-solid fa-sliders"></i> Настройки виджета
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Выбор группы или предмета</label>
+      <select class="select-input" id="groupSelect" onchange="changeLesson(this.value)">
+        <option value="kt">Kompyuter tarmoqlari (Ma) — Умаров У.У.</option>
+        <option value="ml">Machine Learning (AI) — Проф. Каримов А.</option>
+        <option value="de">Raqamli Iqtisodiyot — Акбаров Н.Г.</option>
+        <option value="alg">Algoritmlar va Ma'lumotlar — Рахимов Б.</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Тема оформления (как на твоих 3 фото)</label>
+      <div class="theme-selector">
+        <button class="theme-btn" onclick="setTheme('light', this)">Светлая</button>
+        <button class="theme-btn active" onclick="setTheme('dark', this)">Темная</button>
+        <button class="theme-btn" onclick="setTheme('oled', this)">OLED</button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" id="opacityLabel">Регулировка прозрачности: 82%</label>
+      <input type="range" class="range-slider" id="opacityRange" min="15" max="100" value="82" oninput="updateOpacity(this.value)">
+    </div>
+
+    <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); padding: 14px; border-radius: 14px; font-size: 13px; color: #94a3b8; line-height: 1.6;">
+      🎯 <b>Точная реплика:</b>
+      <ul style="margin-left: 18px; margin-top: 6px;">
+        <li>Неоновый левый индикатор (бар)</li>
+        <li>Время пары + бейдж типа («LECTURE»)</li>
+        <li>Преподаватель 👤 и аудитория 🪑</li>
+        <li>Кнопка «Все пары на сегодня (4) ▼»</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Realistic Smartphone Frame -->
+  <div class="phone-mockup">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+      
+      <!-- Top Status Bar -->
+      <div class="status-bar">
+        <span>13:25</span>
+        <div style="display:flex; gap:6px;">
+          <i class="fa-solid fa-wifi"></i>
+          <i class="fa-solid fa-signal"></i>
+          <i class="fa-solid fa-battery-full"></i>
+        </div>
+      </div>
+
+      <!-- Android Home Screen -->
+      <div class="home-screen">
+        <div class="clock-area">
+          <div class="clock-time">13:25</div>
+          <div class="clock-date">Четверг, 2 октября</div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- THE EXACT REPLICA WIDGET -->
+        <!-- ============================================== -->
+        <div class="widget-container theme-dark" id="liveWidget">
+          <!-- Left Neon Bar -->
+          <div class="widget-indicator-bar" id="wIndicator"></div>
+
+          <!-- Body -->
+          <div class="widget-content-body">
+            <!-- Top Row -->
+            <div class="widget-top-row">
+              <span class="widget-pair-time" id="wTime">4 пара · 13:00–14:20</span>
+              <span class="widget-type-pill" id="wPill">LECTURE</span>
+            </div>
+
+            <!-- Title -->
+            <div class="widget-subject-title" id="wTitle">Kompyuter tarmoqlari (Ma)</div>
+
+            <!-- Meta Row -->
+            <div class="widget-meta-row">
+              <span class="meta-item">
+                <i class="fa-regular fa-user"></i>
+                <span id="wTeacher">Umarov U. U.</span>
+              </span>
+              <span class="meta-item">
+                <i class="fa-solid fa-chalkboard"></i>
+                <span id="wRoom">5/112</span>
+              </span>
+            </div>
+
+            <!-- Bottom Action Row -->
+            <div class="widget-bottom-row">
+              <div class="widget-dropdown-pill" onclick="toggleDropdown(event)">
+                <span id="wAllPairs">Все пары на сегодня (4)</span>
+                <i class="fa-solid fa-caret-down" id="caretIcon"></i>
+              </div>
+            </div>
+
+            <!-- Expanded Dropdown list -->
+            <div class="widget-expanded-list" id="expandedList">
+              <div class="expanded-lesson-item"><span>1 пара (08:30)</span><span>Oliy matematika • 3/201</span></div>
+              <div class="expanded-lesson-item"><span>2 пара (10:00)</span><span>Iqtisodiyot nazariyasi • 2/105</span></div>
+              <div class="expanded-lesson-item"><span>3 пара (11:30)</span><span>Falsafa • 1/310</span></div>
+              <div class="expanded-lesson-item" style="font-weight:700; color:#38bdf8;"><span>4 пара (13:00)</span><span>Kompyuter tarmoqlari • 5/112</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone Dock Icons -->
+        <div class="app-dock">
+          <div class="app-icon" style="background:#22c55e;"><i class="fa-solid fa-phone"></i></div>
+          <div class="app-icon" style="background:#3b82f6;"><i class="fa-solid fa-comment"></i></div>
+          <div class="app-icon" style="background:#004899;"><i class="fa-solid fa-graduation-cap"></i></div>
+          <div class="app-icon" style="background:#ec4899;"><i class="fa-solid fa-camera"></i></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let currentTheme = 'dark';
+    let currentOpacity = 82;
+    let isExpanded = false;
+
+    const lessons = {
+      kt: { time: '4 пара · 13:00–14:20', pill: 'LECTURE', title: 'Kompyuter tarmoqlari (Ma)', teacher: 'Umarov U. U.', room: '5/112' },
+      ml: { time: '3 пара · 11:30–12:50', pill: 'PRACTICE', title: 'Machine Learning & AI', teacher: 'Karimov A. K.', room: '4/204' },
+      de: { time: '2 пара · 10:00–11:20', pill: 'LECTURE', title: 'Raqamli Iqtisodiyot', teacher: 'Akbarov N. G.', room: '1/101' },
+      alg: { time: '1 пара · 08:30–09:50', pill: 'LAB', title: 'Algoritmlar va Ma\'lumotlar', teacher: 'Raximov B. B.', room: '3/312' }
+    };
+
+    function setTheme(theme, btn) {
+      currentTheme = theme;
+      document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyStyles();
+    }
+
+    function updateOpacity(val) {
+      currentOpacity = val;
+      document.getElementById('opacityLabel').innerText = `Регулировка прозрачности: ${val}%`;
+      applyStyles();
+    }
+
+    function applyStyles() {
+      const widget = document.getElementById('liveWidget');
+      widget.className = `widget-container theme-${currentTheme}`;
+      const alpha = currentOpacity / 100;
+      
+      if (currentTheme === 'light') {
+        widget.style.background = `rgba(255, 255, 255, ${alpha})`;
+      } else if (currentTheme === 'dark') {
+        // Matches user's middle picture: deep slate glass
+        widget.style.background = `rgba(30, 48, 70, ${alpha})`;
+      } else if (currentTheme === 'oled') {
+        // Matches user's 3rd picture: pitch dark OLED
+        widget.style.background = `rgba(10, 16, 26, ${Math.min(1, alpha + 0.15)})`;
+      }
+    }
+
+    function changeLesson(key) {
+      const l = lessons[key];
+      if (!l) return;
+      document.getElementById('wTime').innerText = l.time;
+      document.getElementById('wPill').innerText = l.pill;
+      document.getElementById('wTitle').innerText = l.title;
+      document.getElementById('wTeacher').innerText = l.teacher;
+      document.getElementById('wRoom').innerText = l.room;
+    }
+
+    function toggleDropdown(e) {
+      e.stopPropagation();
+      isExpanded = !isExpanded;
+      document.getElementById('expandedList').style.display = isExpanded ? 'flex' : 'none';
+      document.getElementById('caretIcon').className = isExpanded ? 'fa-solid fa-caret-up' : 'fa-solid fa-caret-down';
+    }
+
+    applyStyles();
+  </script>
+</body>
+</html>

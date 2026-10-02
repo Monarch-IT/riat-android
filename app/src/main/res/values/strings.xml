@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RIAT-TDIU</string>
+    <string name="app_subtitle">Факультет Цифровой Экономики ТГЭУ</string>
+
+    <string name="nav_home">Главная</string>
+    <string name="nav_schedule">Расписание</string>
+    <string name="nav_news">Новости</string>
+    <string name="nav_faculty">Факультет</string>
+    <string name="nav_settings">Настройки</string>
+
+    <string name="home_greeting_morning">Доброе утро!</string>
+    <string name="home_greeting_day">Добрый день!</string>
+    <string name="home_greeting_evening">Добрый вечер!</string>
+    <string name="home_next_lesson">Ближайшая пара</string>
+    <string name="home_no_lessons_today">Занятий сегодня нет</string>
+    <string name="home_latest_news">Последние новости</string>
+    <string name="home_quick_access">Быстрый доступ</string>
+
+    <string name="schedule_title">Расписание</string>
+    <string name="schedule_today">Сегодня</string>
+    <string name="schedule_week">Неделя</string>
+    <string name="schedule_select_group">Выберите группу</string>
+    <string name="schedule_select_teacher">Преподаватель</string>
+    <string name="schedule_no_lessons">Занятий нет</string>
+    <string name="schedule_loading">Загрузка расписания…</string>
+
+    <string name="news_title">Новости и события</string>
+    <string name="news_all">Все</string>
+    <string name="news_events">События</string>
+    <string name="news_loading">Загрузка новостей…</string>
+    <string name="news_read_more">Читать далее</string>
+
+    <string name="faculty_title">Факультет</string>
+    <string name="faculty_leadership">Руководство</string>
+    <string name="faculty_departments">Кафедры</string>
+    <string name="faculty_reception">Приём</string>
+
+    <string name="settings_title">Настройки</string>
+    <string name="settings_group">Моя группа</string>
+    <string name="settings_language">Язык</string>
+    <string name="settings_notifications">Уведомления о парах</string>
+    <string name="settings_widget">Настроить виджет</string>
+    <string name="settings_about">О приложении</string>
+    <string name="settings_saved">Сохранено</string>
+
+    <string name="widget_name">Виджет расписания ТГЭУ</string>
+    <string name="widget_title">Расписание ТГЭУ</string>
+    <string name="widget_configure">Настройка виджета</string>
+    <string name="widget_save">Добавить виджет</string>
+    <string name="widget_group">Группа</string>
+    <string name="widget_theme">Тема</string>
+    <string name="widget_opacity">Прозрачность фона</string>
+    <string name="widget_theme_dark">Тёмная</string>
+    <string name="widget_theme_light">Светлая</string>
+    <string name="widget_theme_oled">OLED (чёрная)</string>
+
+    <string name="type_lecture">Лекция</string>
+    <string name="type_practice">Практика</string>
+    <string name="type_lab">Лабораторная</string>
+    <string name="type_seminar">Семинар</string>
+
+    <string name="loading">Загрузка…</string>
+    <string name="retry">Повторить</string>
+    <string name="error_network">Нет подключения к интернету</string>
+    <string name="back">Назад</string>
+    <string name="version">Версия 1.0.0</string>
+    <string name="open_app">Открыть приложение</string>
+    <string name="update_widget">Обновить виджет</string>
+    <string name="channel_name">Уведомления о парах</string>
+    <string name="channel_desc">Напоминания о начале занятий</string>
+</resources>

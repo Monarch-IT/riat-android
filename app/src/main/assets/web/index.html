@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Факультет Цифровой Экономики | ТГЭУ (TDIU TSUE)</title>
+  <meta name="description" content="Официальный портал Факультета Цифровой Экономики ТГЭУ — расписание, тьюторы, кафедры, направления обучения и новости.">
+  <link rel="icon" type="image/png" href="/assets/images/faculty_logo.png">
+  <link rel="apple-touch-icon" href="/assets/images/faculty_logo.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#004899">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="RIAT-TDIU">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/academic-attendance.css">
+  <link rel="stylesheet" href="css/mobile-app-fixes.css">
+</head>
+<body>
+
+  <div id="app-root">
+    <div id="app-loading-screen" style="
+      display:flex; align-items:center; justify-content:center;
+      height:100vh; background:var(--bg-primary,#0a1628);
+      flex-direction:column; gap:16px;
+    ">
+      <img src="https://tsue.uz/media/facultylogo/Kuk.png" alt="ТГЭУ" style="width:72px; filter:brightness(0) invert(1); opacity:0.95;">
+      <div style="color:#60a5fa;font-family:'Outfit',sans-serif;font-size:14px;letter-spacing:1px;">Загрузка портала...</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/edupage_data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/schedule.js"></script>
+  <script src="js/tutor.js"></script>
+  <script src="js/attendance.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

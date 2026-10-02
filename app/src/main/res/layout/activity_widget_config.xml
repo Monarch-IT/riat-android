@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="36dp">
+
+        <!-- ──────────── ЗАГОЛОВОК ──────────── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Настройка виджета"
+            android:textColor="#0F172A"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginBottom="3dp" />
+
+        <View
+            android:layout_width="36dp"
+            android:layout_height="3dp"
+            android:background="#004899"
+            android:layout_marginBottom="20dp" />
+
+        <!-- ──────────── ПРЕВЬЮ ВИДЖЕТА ──────────── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ПРЕДПРОСМОТР"
+            android:textColor="#64748B"
+            android:textSize="10sp"
+            android:letterSpacing="0.12"
+            android:textAllCaps="true"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Container for preview card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EEF2F6"
+            android:padding="12dp"
+            android:layout_marginBottom="24dp">
+
+            <RelativeLayout
+                android:id="@+id/widgetPreviewCard"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="@drawable/bg_widget_glass_light">
+
+                <LinearLayout
+                    android:id="@+id/previewHeaderRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="7dp">
+
+                    <TextView
+                        android:id="@+id/tvPreviewTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="СЛЕДУЮЩАЯ"
+                        android:textColor="#004899"
+                        android:textSize="9sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_widget_tag_light"
+                        android:paddingLeft="7dp"
+                        android:paddingRight="7dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp" />
+
+                    <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tvPreviewTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="13:00–14:20"
+                        android:textColor="#475569"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/previewBodyRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/previewHeaderRow"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp">
+
+                    <FrameLayout
+                        android:layout_width="3dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="11dp"
+                        android:background="#004899" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvPreviewSubject"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Diskret tuzilmalar (Ma)"
+                            android:textColor="#0F172A"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:layout_marginBottom="2dp" />
+
+                        <TextView
+                            android:id="@+id/tvPreviewDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ауд. 4//7 · Abduraxmanova Yu"
+                            android:textColor="#64748B"
+                            android:textSize="11sp"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/btnPreviewNotify"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_widget_icon_btn_light"
+                        android:src="@drawable/ic_bell_subtle_blue"
+                        android:scaleType="centerInside"
+                        android:contentDescription="Уведомления" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/previewFooterRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/previewBodyRow"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="10dp">
+
+                    <TextView
+                        android:id="@+id/tvPreviewGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="#004899"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_widget_pill_light"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp" />
+
+                    <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tvPreviewType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Лекция"
+                        android:textColor="#64748B"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!-- ──────────── ВЫБОР РАСПИСАНИЯ ──────────── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ОБЪЕКТ РАСПИСАНИЯ"
+            android:textColor="#64748B"
+            android:textSize="10sp"
+            android:letterSpacing="0.12"
+            android:textAllCaps="true"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 3 Category Tabs: Groups, Teachers, Rooms -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:id="@+id/tabCategoryGroup"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="Группы"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#004899"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/tabCategoryTeacher"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="Преподаватели"
+                android:gravity="center"
+                android:textColor="#475569"
+                android:textSize="12sp"
+                android:background="@drawable/bg_search_input_light"
+                android:layout_marginHorizontal="2dp" />
+
+            <TextView
+                android:id="@+id/tabCategoryRoom"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:text="Аудитории"
+                android:gravity="center"
+                android:textColor="#475569"
+                android:textSize="12sp"
+                android:background="@drawable/bg_search_input_light"
+                android:layout_marginStart="4dp" />
+        </LinearLayout>
+
+        <!-- Live Search Field -->
+        <EditText
+            android:id="@+id/etSearchTarget"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:background="@drawable/bg_search_input_light"
+            android:hint="Поиск группы, преподавателя или аудитории…"
+            android:textColorHint="#94A3B8"
+            android:textColor="#0F172A"
+            android:textSize="13sp"
+            android:paddingHorizontal="14dp"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Active Selection Banner -->
+        <TextView
+            android:id="@+id/tvSelectedTargetInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_widget_tag_light"
+            android:textColor="#004899"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:text="Загрузка расписания…"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Search Results List -->
+        <ListView
+            android:id="@+id/lvTargetResults"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:background="@drawable/bg_card_light"
+            android:divider="#F1F5F9"
+            android:dividerHeight="1dp"
+            android:nestedScrollingEnabled="true"
+            android:layout_marginBottom="24dp" />
+
+        <!-- ──────────── ТЕМА ──────────── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ТЕМА ВИДЖЕТА"
+            android:textColor="#64748B"
+            android:textSize="10sp"
+            android:letterSpacing="0.12"
+            android:textAllCaps="true"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:id="@+id/themeLight"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="Светлая (Сайт)"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#004899"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/themeDark"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="Тёмная"
+                android:gravity="center"
+                android:textColor="#475569"
+                android:textSize="13sp"
+                android:background="@drawable/bg_search_input_light"
+                android:layout_marginHorizontal="2dp" />
+
+            <TextView
+                android:id="@+id/themeOled"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="OLED"
+                android:gravity="center"
+                android:textColor="#475569"
+                android:textSize="13sp"
+                android:background="@drawable/bg_search_input_light"
+                android:layout_marginStart="4dp" />
+        </LinearLayout>
+
+        <!-- ──────────── ПРОЗРАЧНОСТЬ ──────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ПРОЗРАЧНОСТЬ ВИДЖЕТА"
+                android:textColor="#64748B"
+                android:textSize="10sp"
+                android:letterSpacing="0.12"
+                android:textAllCaps="true"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:id="@+id/tvOpacityValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100%"
+                android:textColor="#004899"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/seekOpacity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="100"
+            android:progressTint="#004899"
+            android:thumbTint="#004899"
+            android:layout_marginBottom="32dp" />
+
+        <!-- ──────────── СОХРАНИТЬ ──────────── -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSaveWidget"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Сохранить виджет"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:cornerRadius="12dp"
+            app:backgroundTint="#004899" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
