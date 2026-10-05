@@ -62,6 +62,12 @@ class SettingsFragment : Fragment() {
             val intent = Intent(requireContext(), WidgetConfigActivity::class.java)
             startActivity(intent)
         }
+
+        view.findViewById<View?>(R.id.rowCheckUpdates)?.setOnClickListener {
+            activity?.let { act ->
+                uz.riat.tdiu.data.update.UpdateChecker.checkForUpdates(act, silent = false)
+            }
+        }
     }
 
     private fun showGroupPicker(view: View, tvGroup: TextView) {

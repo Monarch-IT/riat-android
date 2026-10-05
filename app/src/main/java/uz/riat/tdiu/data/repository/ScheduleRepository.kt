@@ -158,7 +158,8 @@ class ScheduleRepository(private val context: Context) {
 
     suspend fun resolveNextTargetLesson(
         targetType: String,
-        targetName: String
+        targetName: String,
+        mode: String = "next"
     ): NextLessonResult = withContext(Dispatchers.IO) {
         refreshFromNetwork()
         val root = getRootJson()
@@ -194,35 +195,67 @@ class ScheduleRepository(private val context: Context) {
         if (currentDayIdx in 0..5) {
             val todayLessons = getLessonsForDay(root, targetType, actualTargetName, currentDayIdx, weekType)
             if (todayLessons.isNotEmpty()) {
-                // Ongoing right now?
+                // If user wants "current" mode (or if mode == "current"), check for ongoing lesson first
+                if (mode == "current") {
+                    for (l in todayLessons) {
+                        val start = timeToMinutes(l.startTime)
+                        val end   = timeToMinutes(l.endTime)
+                        if (nowMinutes in start..end) {
+                            val left = end - nowMinutes
+                            val timeLabel = if (left > 1)
+                                "${l.startTime}–${l.endTime} · осталось $left мин"
+                            else
+                                "${l.startTime}–${l.endTime}"
+                            return@withContext NextLessonResult(
+                                lesson = l,
+                                statusTag = "ТЕКУЩАЯ ПАРА",
+                                timeLabel = timeLabel,
+                                isToday = true,
+                                targetBadge = badge
+                            )
+                        }
+                    }
+                }
+
+                // Look for next upcoming lesson today
                 for (l in todayLessons) {
                     val start = timeToMinutes(l.startTime)
-                    val end   = timeToMinutes(l.endTime)
-                    if (nowMinutes in start..end) {
-                        val left = end - nowMinutes
-                        val status = if (left > 0) "СЕЙЧАС (-$left м)" else "СЕЙЧАС"
+                    if (start > nowMinutes) {
+                        val wait = start - nowMinutes
+                        val timeLabel = if (wait <= 90)
+                            "${l.startTime}–${l.endTime} · через $wait мин"
+                        else
+                            "${l.startTime}–${l.endTime}"
                         return@withContext NextLessonResult(
                             lesson = l,
-                            statusTag = status,
-                            timeLabel = "${l.startTime}–${l.endTime}",
+                            statusTag = "СЛЕДУЮЩАЯ ПАРА",
+                            timeLabel = timeLabel,
                             isToday = true,
                             targetBadge = badge
                         )
                     }
                 }
-                // Upcoming today?
-                for (l in todayLessons) {
-                    val start = timeToMinutes(l.startTime)
-                    if (start > nowMinutes) {
-                        val wait = start - nowMinutes
-                        val status = if (wait <= 90) "ЧЕРЕЗ $wait МИН" else "СЕГОДНЯ ${l.startTime}"
-                        return@withContext NextLessonResult(
-                            lesson = l,
-                            statusTag = status,
-                            timeLabel = "${l.startTime}–${l.endTime}",
-                            isToday = true,
-                            targetBadge = badge
-                        )
+
+                // If mode was "next" but there are no further upcoming lessons today,
+                // and there is an ongoing lesson right now, show ongoing as fallback
+                if (mode == "next") {
+                    for (l in todayLessons) {
+                        val start = timeToMinutes(l.startTime)
+                        val end   = timeToMinutes(l.endTime)
+                        if (nowMinutes in start..end) {
+                            val left = end - nowMinutes
+                            val timeLabel = if (left > 1)
+                                "${l.startTime}–${l.endTime} · осталось $left мин"
+                            else
+                                "${l.startTime}–${l.endTime}"
+                            return@withContext NextLessonResult(
+                                lesson = l,
+                                statusTag = "ТЕКУЩАЯ ПАРА",
+                                timeLabel = timeLabel,
+                                isToday = true,
+                                targetBadge = badge
+                            )
+                        }
                     }
                 }
             }
@@ -235,12 +268,11 @@ class ScheduleRepository(private val context: Context) {
             val nextLessons = getLessonsForDay(root, targetType, actualTargetName, nextDayIdx, weekType)
             if (nextLessons.isNotEmpty()) {
                 val firstLesson = nextLessons.first()
-                val dayShort = DAY_SHORT.getOrElse(nextDayIdx) { "ДЕНЬ" }
-                val tag = "$dayShort · ${firstLesson.startTime}"
+                val dayShort = DAY_SHORT.getOrElse(nextDayIdx) { "" }
                 return@withContext NextLessonResult(
                     lesson = firstLesson,
-                    statusTag = tag,
-                    timeLabel = "${firstLesson.startTime}–${firstLesson.endTime}",
+                    statusTag = "СЛЕДУЮЩАЯ ПАРА",
+                    timeLabel = if (dayShort.isNotEmpty()) "$dayShort · ${firstLesson.startTime}–${firstLesson.endTime}" else "${firstLesson.startTime}–${firstLesson.endTime}",
                     isToday = false,
                     targetBadge = badge
                 )

@@ -18,6 +18,22 @@ import uz.riat.tdiu.ui.MainActivity
 
 class ScheduleWidgetProvider : AppWidgetProvider() {
 
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        if (intent.action == ACTION_TOGGLE_WIDGET_MODE) {
+            val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+            if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                val prefs = context.getSharedPreferences("riat_widget_prefs", Context.MODE_PRIVATE)
+                val currentMode = prefs.getString("widget_mode_$appWidgetId", "next") ?: "next"
+                val newMode = if (currentMode == "next") "current" else "next"
+                prefs.edit().putString("widget_mode_$appWidgetId", newMode).apply()
+
+                val appWidgetManager = AppWidgetManager.getInstance(context)
+                updateAppWidget(context, appWidgetManager, appWidgetId)
+            }
+        }
+    }
+
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -30,6 +46,7 @@ class ScheduleWidgetProvider : AppWidgetProvider() {
 
     companion object {
         private const val TAG = "ScheduleWidget"
+        const val ACTION_TOGGLE_WIDGET_MODE = "uz.riat.tdiu.TOGGLE_WIDGET_MODE"
 
         /** Choose layout resource by theme */
         private fun layoutForTheme(theme: String): Int = when (theme) {
@@ -53,6 +70,9 @@ class ScheduleWidgetProvider : AppWidgetProvider() {
                 ?: context.getSharedPreferences("riat_prefs", Context.MODE_PRIVATE).getString("user_group", null)
                 ?: ScheduleRepository(context).getAvailableGroups().firstOrNull() ?: ""
 
+            // Mode: "next" (default) or "current"
+            val mode = prefs.getString("widget_mode_$appWidgetId", "next") ?: "next"
+
             // Default theme is LIGHT (matching the website)
             val theme   = prefs.getString("widget_theme_$appWidgetId", "light") ?: "light"
             val opacity = prefs.getInt("widget_opacity_$appWidgetId", 100)
@@ -64,7 +84,7 @@ class ScheduleWidgetProvider : AppWidgetProvider() {
                 apply()
             }
 
-            Log.d(TAG, "Update widget $appWidgetId — type=$targetType name=$targetName theme=$theme")
+            Log.d(TAG, "Update widget $appWidgetId — type=$targetType name=$targetName theme=$theme mode=$mode")
 
             val layoutRes = layoutForTheme(theme)
             val views = RemoteViews(context.packageName, layoutRes)
@@ -81,7 +101,7 @@ class ScheduleWidgetProvider : AppWidgetProvider() {
             }
 
             // Set initial state
-            views.setTextViewText(R.id.tvWidgetStatusTag, "РАСПИСАНИЕ")
+            views.setTextViewText(R.id.tvWidgetStatusTag, if (mode == "current") "ТЕКУЩАЯ ПАРА" else "СЛЕДУЮЩАЯ ПАРА")
             views.setTextViewText(R.id.tvWidgetSubject,   "Синхронизация…")
             views.setTextViewText(R.id.tvWidgetDetails,   "ТГЭУ · Цифровая Экономика")
             views.setTextViewText(R.id.tvWidgetTime,      "")
@@ -95,6 +115,19 @@ class ScheduleWidgetProvider : AppWidgetProvider() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.widgetRoot, pi)
+
+            // Click mode toggle button → toggle between Next and Current
+            val toggleIntent = Intent(context, ScheduleWidgetProvider::class.java).apply {
+                action = ACTION_TOGGLE_WIDGET_MODE
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            }
+            val togglePi = PendingIntent.getBroadcast(
+                context,
+                appWidgetId + 30000,
+                toggleIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            views.setOnClickPendingIntent(R.id.btnWidgetMode, togglePi)
 
             // Click notification button → open notification settings
             val notifyIntent = Intent(context, NotificationConfigActivity::class.java).apply {
@@ -115,7 +148,7 @@ class ScheduleWidgetProvider : AppWidgetProvider() {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val repo = ScheduleRepository(context)
-                    val result = repo.resolveNextTargetLesson(targetType, targetName)
+                    val result = repo.resolveNextTargetLesson(targetType, targetName, mode)
 
                     withContext(Dispatchers.Main) {
                         val lesson = result.lesson

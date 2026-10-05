@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import uz.riat.tdiu.ui.widget.ScheduleWidgetProvider
+import uz.riat.tdiu.data.update.UpdateChecker
 import uz.riat.tdiu.R
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +34,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Check for remote OTA updates in background
+        UpdateChecker.checkForUpdates(this, silent = true)
 
         try {
             val appWidgetManager = AppWidgetManager.getInstance(this)

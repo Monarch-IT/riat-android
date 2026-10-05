@@ -6,6 +6,8 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.speech.tts.TextToSpeech
 import android.util.Log
@@ -64,11 +66,16 @@ class ScheduleNotificationReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
             .setContentIntent(pi)
 
-        if (!soundEnabled) {
+        if (soundEnabled) {
+            val soundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            builder.setSound(soundUri)
+        } else {
             builder.setSilent(true)
         }
         if (!vibrateEnabled) {
             builder.setVibrate(longArrayOf(0))
+        } else {
+            builder.setVibrate(longArrayOf(0, 300, 150, 300))
         }
 
         val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
