@@ -212,8 +212,10 @@ function renderNews(lang) {
   if (!track) return;
 
   const t = i18n[lang];
+  // Double the items so CSS infinite animation can loop seamlessly
+  const doubled = [...NEWS_DATA, ...NEWS_DATA];
 
-  track.innerHTML = NEWS_DATA.map(item => {
+  track.innerHTML = doubled.map(item => {
     const n = item[lang] || item.ru;
     return `
       <a class="news-wheel-card" href="${item.link}" target="_blank" rel="noopener">
@@ -232,23 +234,15 @@ function renderNews(lang) {
       </a>
     `;
   }).join('');
+
+  // Reset animation so it restarts cleanly on language switch
+  track.style.animation = 'none';
+  track.offsetHeight; // reflow
+  track.style.animation = '';
 }
 
-function rotateNewsWheel(dir) {
-  const track = document.getElementById('newsWheelTrack');
-  if (!track || !NEWS_DATA.length) return;
-
-  if (window.innerWidth <= 768) {
-    const scrollAmount = track.clientWidth * 0.85;
-    track.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
-    return;
-  }
-
-  const cardWidth = 330;
-  const maxOffset = Math.max(0, NEWS_DATA.length - 1);
-  currentNewsOffset = Math.max(0, Math.min(currentNewsOffset + dir, maxOffset));
-  track.style.transform = `translateX(-${currentNewsOffset * cardWidth}px)`;
-}
+// No-op stub kept for any lingering HTML references
+function rotateNewsWheel(dir) {}
 
 function renderPartners(lang) {
   const track = document.getElementById('partnersWheelTrack');
@@ -546,8 +540,11 @@ function initPwaController() {
 }
 
 function showPwaBanner() {
+  const isNative = window.isNativeApp || window.Android || /wv|AndroidApp|RIAT_iOS/i.test(navigator.userAgent);
+  if (isNative || _isStandalone) return;
+
   const banner = document.getElementById('pwaInstallBanner');
-  if (banner && !_isStandalone) {
+  if (banner) {
     banner.style.display = 'flex';
   }
 }
@@ -571,7 +568,7 @@ function handlePwaInstallClick() {
     openIosInstallModal();
   } else {
     const link = document.createElement('a');
-    link.href = '/downloads/riat-tdiu.apk';
+    link.href = '/app/latest.apk';
     link.download = 'riat-tdiu.apk';
     document.body.appendChild(link);
     link.click();

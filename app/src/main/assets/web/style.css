@@ -975,6 +975,8 @@ a.dossier-contact-line:hover {
 .news-wheel-track {
   display: flex;
   gap: 20px;
+  flex-shrink: 0;
+  min-width: max-content;
   animation: scrollNewsInfinite 60s linear infinite;
   will-change: transform;
 }
@@ -989,9 +991,10 @@ a.dossier-contact-line:hover {
 }
 
 .news-wheel-card {
-  min-width: 400px;
-  max-width: 400px;
-  flex: 0 0 400px;
+  min-width: 340px;
+  max-width: 340px;
+  flex: 0 0 340px;
+  height: 370px;
   background: #ffffff;
   border: 1px solid rgba(0, 72, 153, 0.12);
   border-radius: var(--radius-md);
@@ -1012,7 +1015,7 @@ a.dossier-contact-line:hover {
 
 .news-card-thumb-wrap {
   width: 100%;
-  height: 210px;
+  height: 180px;
   overflow: hidden;
   background: linear-gradient(135deg, #001f4d 0%, #004899 100%);
   position: relative;
@@ -1059,15 +1062,16 @@ a.dossier-contact-line:hover {
 }
 
 .news-card-title {
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 700;
   color: #0f172a;
   line-height: 1.45;
   margin-bottom: 12px;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex: 1;
 }
 
 .news-card-footer {
@@ -7266,12 +7270,18 @@ body.dark-theme .sched-mcard-empty { background: rgba(10,22,40,0.6); border-colo
     gap: 12px;
   }
   .news-wheel-card {
-    min-width: 76vw !important;
-    max-width: 76vw !important;
-    flex: 0 0 76vw !important;
+    min-width: 250px !important;
+    max-width: 250px !important;
+    flex: 0 0 250px !important;
+    height: 310px !important;
+    border-radius: 14px !important;
   }
   .news-card-thumb-wrap {
-    height: 160px;
+    height: 140px !important;
+  }
+  .news-card-title {
+    font-size: 13px !important;
+    -webkit-line-clamp: 3 !important;
   }
 
   .leader-dossier-card {
@@ -7292,21 +7302,96 @@ body.dark-theme .sched-mcard-empty { background: rgba(10,22,40,0.6); border-colo
     font-size: 18px;
   }
   .lcc-slide {
-    grid-template-columns: 1fr;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: auto !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(0, 72, 153, 0.12) !important;
+    border-left: 4px solid #005bb8 !important;
+    background: #ffffff !important;
+    box-shadow: 0 10px 30px -6px rgba(0, 45, 98, 0.1) !important;
+    overflow: hidden !important;
   }
   .lcc-photo-col {
-    height: 240px;
-    order: -1;
+    width: 100% !important;
+    height: 240px !important;
+    min-height: 240px !important;
+    order: -1 !important;
+    position: relative !important;
+    background: linear-gradient(180deg, #071e3d 0%, #0c2d5e 100%) !important;
+    border-radius: 0 !important;
+  }
+  .lcc-photo-col::before {
+    display: none !important;
+  }
+  .lcc-photo-col::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 60px;
+    background: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 2;
+  }
+  body.dark-theme .lcc-photo-col::after {
+    background: linear-gradient(to top, rgba(13, 26, 48, 1) 0%, rgba(13, 26, 48, 0) 100%);
+  }
+  .lcc-photo-col img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center bottom !important;
+    display: block !important;
   }
   .lcc-content {
-    padding: 20px 16px;
+    padding: 16px 18px 20px !important;
+    gap: 0 !important;
+    order: 0 !important;
+    position: relative !important;
+    z-index: 3 !important;
+  }
+  .lcc-top-row {
+    margin-bottom: 8px !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+  .lcc-role-tag {
+    font-size: 10px !important;
+    padding: 4px 10px !important;
+  }
+  .lcc-institution {
+    font-size: 11px !important;
   }
   .lcc-name {
-    font-size: 22px;
+    font-size: 18px !important;
+    line-height: 1.25 !important;
+    margin: 0 0 4px !important;
+    letter-spacing: -0.01em !important;
   }
   .lcc-degree {
-    font-size: 12.5px;
-    margin-bottom: 16px;
+    font-size: 11.5px !important;
+    margin-bottom: 12px !important;
+    line-height: 1.4 !important;
+  }
+  .lcc-contacts {
+    gap: 7px !important;
+    margin-bottom: 12px !important;
+  }
+  .lcc-contact-row {
+    font-size: 12px !important;
+    gap: 9px !important;
+  }
+  .lcc-icon {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+    border-radius: 8px !important;
+  }
+  .lcc-bio {
+    font-size: 11.5px !important;
+    line-height: 1.5 !important;
+    -webkit-line-clamp: 3 !important;
+    margin-bottom: 0 !important;
   }
 
   /* Universal Table Mobile Responsiveness */
