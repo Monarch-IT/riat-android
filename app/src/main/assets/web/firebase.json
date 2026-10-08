@@ -4,7 +4,28 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "downloads/**",
+      "backup/**",
+      "scripts/**",
+      "riat-android/**",
+      "**/*.apk",
+      "**/*.aab",
+      "**/*.jar",
+      "**/*.gradle",
+      "**/gradlew",
+      "**/gradlew.bat"
+    ],
+    "headers": [
+      {
+        "source": "update.json",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate, max-age=0"
+          }
+        ]
+      }
     ]
   }
 }
