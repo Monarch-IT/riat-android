@@ -48,10 +48,17 @@ class SettingsFragment : Fragment() {
 
         tvGroup.text = currentGroup
 
+        val notifyPrefs = context.getSharedPreferences("riat_notify_prefs", Context.MODE_PRIVATE)
         val switchNotif = view.findViewById<SwitchCompat>(R.id.switchNotifications)
-        switchNotif.isChecked = prefs.getBoolean("notifications_enabled", true)
+        switchNotif.isChecked = notifyPrefs.getBoolean("notify_enabled", true)
         switchNotif.setOnCheckedChangeListener { _, checked ->
             prefs.edit().putBoolean("notifications_enabled", checked).apply()
+            notifyPrefs.edit().putBoolean("notify_enabled", checked).apply()
+            if (checked) {
+                ScheduleAlarmScheduler.scheduleNextAlarm(context)
+            } else {
+                ScheduleAlarmScheduler.cancelAlarms(context)
+            }
         }
 
         view.findViewById<View>(R.id.rowGroup).setOnClickListener {

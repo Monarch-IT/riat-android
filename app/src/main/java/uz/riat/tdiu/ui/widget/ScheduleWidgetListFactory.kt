@@ -118,7 +118,7 @@ class ScheduleWidgetListFactory(
 
     override fun getLoadingView(): RemoteViews? = null
 
-    override fun getViewTypeCount(): Int = 1
+    override fun getViewTypeCount(): Int = 2
 
     override fun getItemId(position: Int): Long = position.toLong()
 

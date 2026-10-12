@@ -58,10 +58,14 @@ object ScheduleAlarmScheduler {
                     Calendar.SATURDAY  -> 5
                     else               -> 6
                 }
-                if (currentDayIdx in 0..5) {
-                    val todayLessons = repo.getScheduleForGroup(targetName, currentDayIdx)
-                    var scheduledAny = false
+                val todayLessons = when (targetType) {
+                    "teacher" -> repo.getScheduleForTeacher(targetName, currentDayIdx)
+                    "room"    -> repo.getScheduleForRoom(targetName, currentDayIdx)
+                    else      -> repo.getScheduleForGroup(targetName, currentDayIdx)
+                }
+                var scheduledAny = false
 
+                if (currentDayIdx in 0..5) {
                     for (lesson in todayLessons) {
                         val lessonStartMinutes = timeToMinutes(lesson.startTime)
                         val triggerMinutes = lessonStartMinutes - advanceMin
@@ -111,7 +115,11 @@ object ScheduleAlarmScheduler {
                 for (offset in 1..7) {
                     val nextDayIdx = (currentDayIdx + offset) % 7
                     if (nextDayIdx >= 6) continue
-                    val nextLessons = repo.getScheduleForGroup(targetName, nextDayIdx)
+                    val nextLessons = when (targetType) {
+                        "teacher" -> repo.getScheduleForTeacher(targetName, nextDayIdx)
+                        "room"    -> repo.getScheduleForRoom(targetName, nextDayIdx)
+                        else      -> repo.getScheduleForGroup(targetName, nextDayIdx)
+                    }
                     if (nextLessons.isNotEmpty()) {
                         val firstLesson = nextLessons.first()
                         val lessonStartMinutes = timeToMinutes(firstLesson.startTime)

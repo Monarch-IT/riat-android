@@ -60,16 +60,31 @@
         android:background="#111827"
         android:layout_marginBottom="2dp" />
 
-    <ListView
-        android:id="@+id/lvWidgetLessons"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="#0A0A0A"
-        android:dividerHeight="1dp"
-        android:scrollbars="none"
-        android:listSelector="@android:color/transparent"
-        android:drawSelectorOnTop="false" />
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/lvWidgetLessons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="#0A0A0A"
+            android:dividerHeight="1dp"
+            android:scrollbars="none"
+            android:listSelector="@android:color/transparent"
+            android:drawSelectorOnTop="false" />
+
+        <TextView
+            android:id="@+id/tvWidgetEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Нет занятий на сегодня"
+            android:textColor="#475569"
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

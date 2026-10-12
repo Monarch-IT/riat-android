@@ -312,7 +312,7 @@ class ScheduleWidgetProvider : AppWidgetProvider() {
                 data = android.net.Uri.parse("riat-widget://lessons/$appWidgetId")
             }
             views.setRemoteAdapter(R.id.lvWidgetLessons, serviceIntent)
-            views.setEmptyView(R.id.lvWidgetLessons, R.id.tvExpandedFooter)
+            views.setEmptyView(R.id.lvWidgetLessons, R.id.tvWidgetEmpty)
 
             safeUpdate(appWidgetManager, appWidgetId, views)
 
