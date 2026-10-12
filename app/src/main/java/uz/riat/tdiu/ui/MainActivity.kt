@@ -22,6 +22,17 @@ import uz.riat.tdiu.ui.widget.ScheduleWidgetProvider
 import uz.riat.tdiu.data.update.UpdateChecker
 import uz.riat.tdiu.R
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import android.webkit.JavascriptInterface
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import uz.riat.tdiu.data.notification.ScheduleAlarmScheduler
+import uz.riat.tdiu.ui.widget.NotificationConfigActivity
+import android.content.Intent
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
@@ -30,12 +41,17 @@ class MainActivity : AppCompatActivity() {
     private val localUrl = "file:///android_asset/web/index.html"
     private var injected = false
 
+    companion object {
+        private const val REQ_NOTIF_PERMISSION = 701
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Check for remote OTA updates in background
+        checkNotificationPermissions()
+        ScheduleAlarmScheduler.scheduleNextAlarm(this)
         UpdateChecker.checkForUpdates(this, silent = true)
 
         try {
@@ -94,6 +110,7 @@ class MainActivity : AppCompatActivity() {
 
         webView.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
         webView.isHapticFeedbackEnabled = true
+        webView.addJavascriptInterface(RiatNativeBridge(), "RiatNative")
 
         webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -261,9 +278,75 @@ class MainActivity : AppCompatActivity() {
         return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
+    private fun checkNotificationPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    REQ_NOTIF_PERMISSION
+                )
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQ_NOTIF_PERMISSION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                ScheduleAlarmScheduler.scheduleNextAlarm(this)
+            }
+        }
+    }
+
+    inner class RiatNativeBridge {
+        @JavascriptInterface
+        fun scheduleNextAlarm() {
+            runOnUiThread {
+                ScheduleAlarmScheduler.scheduleNextAlarm(this@MainActivity)
+            }
+        }
+
+        @JavascriptInterface
+        fun triggerTestNotification() {
+            runOnUiThread {
+                ScheduleAlarmScheduler.triggerTestNotification(this@MainActivity)
+                Toast.makeText(this@MainActivity, "Тестовое звуковое уведомление отправлено", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        @JavascriptInterface
+        fun openNotificationSettings() {
+            runOnUiThread {
+                startActivity(Intent(this@MainActivity, NotificationConfigActivity::class.java))
+            }
+        }
+
+        @JavascriptInterface
+        fun setTargetGroup(groupName: String) {
+            runOnUiThread {
+                getSharedPreferences("riat_prefs", Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("user_group", groupName)
+                    .apply()
+                getSharedPreferences("riat_widget_prefs", Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("active_target_name", groupName)
+                    .apply()
+                ScheduleAlarmScheduler.scheduleNextAlarm(this@MainActivity)
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         webView.onResume()
+        ScheduleAlarmScheduler.scheduleNextAlarm(this)
     }
 
     override fun onPause() {

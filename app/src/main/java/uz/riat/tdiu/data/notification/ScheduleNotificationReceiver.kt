@@ -47,10 +47,14 @@ class ScheduleNotificationReceiver : BroadcastReceiver() {
         val vibrateEnabled = prefs.getBoolean("notify_vibrate", true)
         val voiceEnabled = prefs.getBoolean("notify_voice", true)
 
-        val soundUri = Uri.parse(
-            ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                    context.packageName + "/" + R.raw.schedule_alarm
-        )
+        val soundUri = try {
+            Uri.parse(
+                ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                        context.packageName + "/" + R.raw.schedule_alarm
+            )
+        } catch (e: Exception) {
+            android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION)
+        }
 
         createNotificationChannel(context, soundUri)
 
@@ -71,12 +75,13 @@ class ScheduleNotificationReceiver : BroadcastReceiver() {
         )
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_notification)
             .setContentTitle("РИАТ · $type через $advanceMin мин")
             .setContentText(contentText)
             .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setAutoCancel(true)
             .setContentIntent(pi)
 
