@@ -183,39 +183,56 @@ class MainActivity : AppCompatActivity() {
         '#pwaInstallBanner,#iosInstallModalOverlay,.pwa-install-banner,.install-banner{display:none!important}',
 
         /* ── NEWS CAROUSEL FIX ──────────────────────────────
-           Replace absolute-offset JS carousel with native
-           CSS scroll-snap. The wheel buttons are hidden
-           on mobile; users swipe naturally. */
+           The desktop version uses CSS @keyframes animation with translateX
+           for an infinite auto-scroll effect. This completely breaks touch
+           scrolling in WebView because the transform moves the container,
+           not the scroll position. We kill the animation entirely and
+           replace with native CSS scroll-snap. */
+
+        /* Kill the infinite scroll animation on the track */
+        '@keyframes scrollNewsInfinite{0%{transform:translateX(0)}100%{transform:translateX(0)}}',
         '.news-wheel-section{overflow:hidden!important}',
         '.news-wheel-track{',
+            'animation:none!important;',
+            '-webkit-animation:none!important;',
+            'animation-play-state:paused!important;',
             'display:flex!important;',
             'flex-direction:row!important;',
-            'gap:12px!important;',
+            'gap:14px!important;',
             'overflow-x:scroll!important;',
             'overflow-y:hidden!important;',
             'scroll-snap-type:x mandatory!important;',
             '-webkit-overflow-scrolling:touch!important;',
+            'overscroll-behavior-x:contain!important;',
             'scrollbar-width:none!important;',
             'padding:8px 16px 16px 16px!important;',
             'width:100%!important;',
+            'min-width:unset!important;',
+            'max-width:100%!important;',
             'box-sizing:border-box!important;',
             'transform:none!important;',
             'will-change:unset!important;',
             'transition:none!important;',
+            'flex-wrap:nowrap!important;',
+            'touch-action:pan-x!important;',
         '}',
         '.news-wheel-track::-webkit-scrollbar{display:none!important}',
         '.news-wheel-card{',
-            'min-width:78vw!important;',
-            'max-width:78vw!important;',
-            'width:78vw!important;',
+            'min-width:82vw!important;',
+            'max-width:82vw!important;',
+            'width:82vw!important;',
+            'height:auto!important;',
+            'flex:0 0 82vw!important;',
             'flex-shrink:0!important;',
             'scroll-snap-align:start!important;',
             'box-sizing:border-box!important;',
+            'transform:none!important;',
+            'transition:none!important;',
         '}',
         '.news-card-thumb-wrap{height:160px!important;overflow:hidden!important}',
         '.news-card-thumb-wrap img{width:100%!important;height:100%!important;object-fit:cover!important}',
         /* Hide navigation arrows on mobile */
-        '.news-wheel-btn,.news-nav-btn,.news-arrow{display:none!important}',
+        '.news-wheel-btn,.news-nav-btn,.news-arrow,.news-wheel-controls{display:none!important}',
 
         /* ── LEADERSHIP CARD FIX ────────────────────────────*/
         '.lcc-photo-col{',
@@ -240,31 +257,63 @@ class MainActivity : AppCompatActivity() {
     (document.head || document.documentElement).appendChild(style);
 
     /* ── Disable JS carousel animation on mobile ────────────
-       Patch the carousel's internal scrollTo calls to use
-       native scroll-snap instead of JS translateX magic.
+       The renderNews() function in main.js doubles the items array
+       (doubled = [...NEWS_DATA, ...NEWS_DATA]) so the CSS animation
+       loops seamlessly. On mobile we only need the original set.
+       We also must kill CSS animation on the element directly.
     */
     function patchNewsCarousel() {
-        var track = document.querySelector('.news-wheel-track');
+        var track = document.getElementById('newsWheelTrack') ||
+                    document.querySelector('.news-wheel-track');
         if (!track) return;
 
-        /* Remove existing listeners by cloning */
-        var oldTrack = track;
-        var newTrack = oldTrack.cloneNode(true);
-        oldTrack.parentNode.replaceChild(newTrack, oldTrack);
-        track = newTrack;
+        /* Kill CSS animation on the element directly */
+        track.style.animation = 'none';
+        track.style.webkitAnimation = 'none';
+        track.style.animationPlayState = 'paused';
+        track.style.transform = 'none';
+        track.style.minWidth = 'unset';
+        track.style.willChange = 'unset';
 
-        /* Apply scroll behaviour */
-        track.style.cssText = '';  /* Let our injected CSS take over */
+        /* Remove duplicate cards (second half added by renderNews doubling) */
+        var cards = track.querySelectorAll('.news-wheel-card');
+        var total = cards.length;
+        if (total > 0 && total % 2 === 0) {
+            var half = total / 2;
+            for (var i = total - 1; i >= half; i--) {
+                var c = cards[i];
+                if (c && c.parentNode === track) track.removeChild(c);
+            }
+        }
 
-        /* Kill all interval timers that drive the carousel */
+        /* Kill all interval timers that drive auto-scroll */
         var highId = window.setInterval(function(){}, 99999);
         for (var i = 0; i <= highId; i++) { window.clearInterval(i); }
+
+        /* Add touch-action attribute to help WebView recognize horizontal swipe */
+        track.setAttribute('touch-action', 'pan-x');
+
+        /* Scroll to start */
+        track.scrollLeft = 0;
+    }
+
+    /* Run after a short delay to ensure renderNews() has populated the DOM */
+    function tryPatch(attemptsLeft) {
+        var track = document.getElementById('newsWheelTrack') ||
+                    document.querySelector('.news-wheel-track');
+        if (track && track.children.length > 0) {
+            patchNewsCarousel();
+        } else if (attemptsLeft > 0) {
+            setTimeout(function() { tryPatch(attemptsLeft - 1); }, 300);
+        }
     }
 
     if (document.readyState === 'complete') {
-        patchNewsCarousel();
+        setTimeout(function() { tryPatch(10); }, 500);
     } else {
-        window.addEventListener('load', patchNewsCarousel);
+        window.addEventListener('load', function() {
+            setTimeout(function() { tryPatch(10); }, 500);
+        });
     }
 })();
         """.trimIndent()

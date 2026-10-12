@@ -65,6 +65,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/schedule_widget_info" />
         </receiver>
+        <service
+            android:name=".ui.widget.ScheduleWidgetListService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"

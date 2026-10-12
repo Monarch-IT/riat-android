@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="14dp"
+    android:paddingEnd="14dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:minHeight="48dp">
+
+    <TextView
+        android:id="@+id/tvItemSlotNum"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:gravity="center"
+        android:textColor="#004899"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:background="@drawable/bg_widget_tag_light"
+        android:layout_marginEnd="8dp" />
+
+    <LinearLayout
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginEnd="8dp">
+
+        <TextView
+            android:id="@+id/tvItemTimeStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#0F172A"
+            android:textSize="9sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvItemTimeEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#64748B"
+            android:textSize="9sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="2dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:background="#004899" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvItemSubject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#0F172A"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/tvItemDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#64748B"
+            android:textSize="9sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvItemType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="#004899"
+        android:textSize="8sp"
+        android:textStyle="bold"
+        android:background="@drawable/bg_widget_pill_light"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp" />
+
+</LinearLayout>

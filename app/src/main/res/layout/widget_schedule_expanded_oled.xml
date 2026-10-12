@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_widget_oled_100"
+    android:padding="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="6dp">
+
+        <TextView
+            android:id="@+id/tvExpandedTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="РАСПИСАНИЕ НА СЕГОДНЯ"
+            android:textColor="#00E1D9"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.10"
+            android:background="@drawable/bg_widget_tag"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp" />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvExpandedGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#60A5FA"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_widget_pill"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="14dp"
+        android:background="#111827"
+        android:layout_marginBottom="2dp" />
+
+    <ListView
+        android:id="@+id/lvWidgetLessons"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="#0A0A0A"
+        android:dividerHeight="1dp"
+        android:scrollbars="none"
+        android:listSelector="@android:color/transparent"
+        android:drawSelectorOnTop="false" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvExpandedFooter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ТГЭУ · Цифровая Экономика"
+            android:textColor="#334155"
+            android:textSize="9sp" />
+
+        <ImageButton
+            android:id="@+id/btnExpandedNotify"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_widget_icon_btn"
+            android:src="@drawable/ic_bell_subtle"
+            android:scaleType="centerInside"
+            android:contentDescription="Уведомления" />
+    </LinearLayout>
+
+</LinearLayout>
